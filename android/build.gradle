@@ -1,39 +1,32 @@
-group 'com.mr.flutter.plugin.filepicker'
-version '1.0-SNAPSHOT'
-
 buildscript {
+    ext.kotlin_version = '1.5.10'
     repositories {
         google()
         mavenCentral()
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.3.0'
+        classpath 'com.android.tools.build:gradle:4.1.2'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath 'com.google.gms:google-services:4.3.4'  // Google Services plugin
     }
 }
 
-rootProject.allprojects {
+allprojects {
     repositories {
         google()
         mavenCentral()
     }
 }
 
-apply plugin: 'com.android.library'
+rootProject.buildDir = '../build'
+subprojects {
+    project.buildDir = "${rootProject.buildDir}/${project.name}"
+}
+subprojects {
+    project.evaluationDependsOn(':app')
+}
 
-android {
-    compileSdkVersion 33
-
-    defaultConfig {
-        minSdkVersion 16
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-    }
-    lintOptions {
-        disable 'InvalidPackage'
-    }
-      dependencies {
-        implementation 'androidx.core:core:1.0.2'
-        implementation 'androidx.annotation:annotation:1.0.0'
-        implementation "androidx.lifecycle:lifecycle-runtime:2.1.0"
-    }
+task clean(type: Delete) {
+    delete rootProject.buildDir
 }
